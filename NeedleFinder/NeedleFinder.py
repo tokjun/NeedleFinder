@@ -336,6 +336,11 @@ class NeedleFinderWidget:
     self.drawFiducialPoints.setChecked(0)
     parameterFrame.addRow(self.drawFiducialPoints)
 
+    # Save needle trajectory
+    self.saveTrajectoryPoints=qt.QCheckBox('Save Needle Trajectory?')
+    self.saveTrajectoryPoints.setChecked(0)
+    parameterFrame.addRow(self.saveTrajectoryPoints)
+
     # Auto find Tips: Tracking in +z and -z direction
     self.autoStopTip = qt.QCheckBox('Tracking in both directions')
     self.autoStopTip.setChecked(0)
@@ -2040,6 +2045,13 @@ class NeedleFinderLogic:
     fiducial.SetName('A init')
     fiducial.SetFiducialCoordinates(self.ijk2ras(AInit))
     """
+
+    if widget.drawFiducialPoints.isChecked():
+      markupsNode = slicer.mrmlScene.CreateNodeByClass('vtkMRMLMarkupsFiducialNode')
+      markupsNode.SetName('NeedleFinder1')
+      slicer.mrmlScene.AddNode(markupsNode)
+      markupsNode.AddFiducialFromArray(self.controlPoints[0], 'Tip');
+
     
     for step in range(0,NbStepsNeedle+1):
       
@@ -2251,11 +2263,12 @@ class NeedleFinderLogic:
       self.controlPoints.append(self.ijk2ras(A))
       controlPointsIJK.append(A)
       #print('step:',step,':',minEstimator )
-      if drawFiducialPoints:
-        fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
-        fiducial.Initialize(slicer.mrmlScene)
-        fiducial.SetName('.'+str(minEstimator))
-        fiducial.SetFiducialCoordinates(self.controlPoints[step+1])
+      if widget.drawFiducialPoints.isChecked():
+        #fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
+        #fiducial.Initialize(slicer.mrmlScene)
+        #fiducial.SetName('.'+str(minEstimator))
+        #fiducial.SetFiducialCoordinates(self.controlPoints[step+1])
+        markupsNode.AddFiducialFromArray(self.controlPoints[step+1], '.'+str(minEstimator));
 
       if A[2]<=axialSegmentationLimit and A!=A0:
         break
@@ -2320,6 +2333,13 @@ class NeedleFinderLogic:
     controlPoints.append(self.ijk2ras(A))
     controlPointsIJK.append(A)
     bestControlPoints.append(self.ijk2ras(A))
+
+    if widget.drawFiducialPoints.isChecked():
+      markupsNode = slicer.mrmlScene.CreateNodeByClass('vtkMRMLMarkupsFiducialNode')
+      markupsNode.SetName('NeedleFinder2')
+      slicer.mrmlScene.AddNode(markupsNode)
+      markupsNode.AddFiducialFromArray(self.controlPoints[0], 'Tip');
+
 
     for step in range(0,NbStepsNeedle+2):
       print "length", lenghtNeedle
@@ -2459,10 +2479,11 @@ class NeedleFinderLogic:
       controlPointsIJK.append(A)
 
       if widget.drawFiducialPoints.isChecked():
-        fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
-        fiducial.Initialize(slicer.mrmlScene)
-        fiducial.SetName('.')
-        fiducial.SetFiducialCoordinates(controlPoints[step+1])
+        #fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
+        #fiducial.Initialize(slicer.mrmlScene)
+        #fiducial.SetName('.')
+        #fiducial.SetFiducialCoordinates(controlPoints[step+1])
+        markupsNode.AddFiducialFromArray(self.controlPoints[step+1], '.'+str(minEstimator));
 
       if A[2]<=axialSegmentationLimit and A!=A0:
         break
@@ -2523,6 +2544,12 @@ class NeedleFinderLogic:
     controlPoints.append(self.ijk2ras(A))
     controlPointsIJK.append(A)
     bestControlPoints.append(self.ijk2ras(A))
+
+    if widget.drawFiducialPoints.isChecked():
+      markupsNode = slicer.mrmlScene.CreateNodeByClass('vtkMRMLMarkupsFiducialNode')
+      markupsNode.SetName('NeedleFinder3')
+      slicer.mrmlScene.AddNode(markupsNode)
+      markupsNode.AddFiducialFromArray(self.controlPoints[0], 'Tip');
 
     for step in range(0,NbStepsNeedle+2):
       
@@ -2661,10 +2688,11 @@ class NeedleFinderLogic:
       controlPointsIJK.append(A)
 
       if widget.drawFiducialPoints.isChecked():
-        fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
-        fiducial.Initialize(slicer.mrmlScene)
-        fiducial.SetName('.')
-        fiducial.SetFiducialCoordinates(controlPoints[step+1])
+        #fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
+        #fiducial.Initialize(slicer.mrmlScene)
+        #fiducial.SetName('.')
+        #fiducial.SetFiducialCoordinates(controlPoints[step+1])
+        markupsNode.AddFiducialFromArray(self.controlPoints[step+1], '.'+str(minEstimator));
 
       if A[2]<=axialSegmentationLimit:
         break
@@ -2780,6 +2808,12 @@ class NeedleFinderLogic:
     #print "initialtip:", A
     #---------------------------------------------------------------------------------
     """
+
+    if widget.drawFiducialPoints.isChecked():
+      markupsNode = slicer.mrmlScene.CreateNodeByClass('vtkMRMLMarkupsFiducialNode')
+      markupsNode.SetName('NeedleFinder4')
+      slicer.mrmlScene.AddNode(markupsNode)
+      markupsNode.AddFiducialFromArray(self.controlPoints[0], 'Tip');
 
     for step in range(0,NbStepsNeedle+1):
       
@@ -3007,10 +3041,11 @@ class NeedleFinderLogic:
       controlPointsIJK.append(A)
 
       if widget.drawFiducialPoints.isChecked():
-        fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
-        fiducial.Initialize(slicer.mrmlScene)
-        fiducial.SetName('.'+str(step)+'.'+str(self.objectiveFunction(imageData, A, 3, spacing, 1)))
-        fiducial.SetFiducialCoordinates(controlPointsUP[step+1])
+        #fiducial = slicer.mrmlScene.CreateNodeByClass('vtkMRMLAnnotationFiducialNode')
+        #fiducial.Initialize(slicer.mrmlScene)
+        #fiducial.SetName('.'+str(step)+'.'+str(self.objectiveFunction(imageData, A, 3, spacing, 1)))
+        #fiducial.SetFiducialCoordinates(controlPointsUP[step+1])
+        markupsNode.AddFiducialFromArray(self.controlPoints[step+1], '.'+str(minEstimator));
 
       if A[2]<=axialSegmentationLimit and A!=A0:
         break
@@ -3193,6 +3228,14 @@ class NeedleFinderLogic:
     nbEvaluationPoints=50
     n = len(controlPointListSorted)-1
     Q=[[0,0,0] for t in range(nbEvaluationPoints+1)]
+
+    markupsNode = None
+    
+    if widget.saveTrajectoryPoints.isChecked():
+      markupsNode = slicer.mrmlScene.CreateNodeByClass('vtkMRMLMarkupsFiducialNode')
+      markupsNode.SetName('Traj')
+      slicer.mrmlScene.AddNode(markupsNode)
+
     # start calculation
     for t in range(nbEvaluationPoints):
       tt = float(t)/(1*nbEvaluationPoints)
@@ -3204,6 +3247,9 @@ class NeedleFinderLogic:
       linesIDArray.InsertNextTuple1(pointIndex)
       linesIDArray.SetTuple1( 0, linesIDArray.GetNumberOfTuples() - 1 )
       lines.SetNumberOfCells(1)
+      if markupsNode:
+        markupsNode.AddFiducialFromArray(Q[t]);
+
     ### Create model node
     model = slicer.vtkMRMLModelNode()
     model.SetScene(scene)
@@ -5305,6 +5351,7 @@ class NeedleFinderLogic:
     config.set('BooleanSection', 'gradient', widget.gradient.isChecked())
     config.set('BooleanSection', 'filterControlPoints', widget.filterControlPoints.isChecked())
     config.set('BooleanSection', 'drawFiducialPoints', widget.drawFiducialPoints.isChecked())
+    config.set('BooleanSection', 'saveTrajectoryPoints', widget.saveTrajectoryPoints.isChecked())
     config.set('BooleanSection', 'autoStopTip', widget.autoStopTip.isChecked())
     config.set('BooleanSection', 'extendNeedle', widget.extendNeedle.isChecked())
     config.set('BooleanSection', 'maxLength', widget.maxLength.isChecked())
@@ -5340,6 +5387,8 @@ class NeedleFinderLogic:
     gradient                  = config.getboolean('BooleanSection', 'gradient')
     filterControlPoints       = config.getboolean('BooleanSection', 'filterControlPoints')
     drawFiducialPoints        = config.getboolean('BooleanSection', 'drawFiducialPoints')
+    saveTrajectoryPoints      = config.getboolean('BooleanSection', 'saveTrajectoryPoints')
+
     autoStopTip               = config.getboolean('BooleanSection', 'autoStopTip')
     extendNeedle              = config.getboolean('BooleanSection', 'extendNeedle')
     maxLength                 = config.getboolean('BooleanSection', 'maxLength')
@@ -5361,6 +5410,7 @@ class NeedleFinderLogic:
     widget.gradient.checked             = gradient 
     widget.filterControlPoints.checked  = filterControlPoints
     widget.drawFiducialPoints.checked   = drawFiducialPoints
+    widget.saveTrajectoryPoints.checked = saveTrajectoryPoints
     widget.autoStopTip.checked          = autoStopTip
     widget.extendNeedle.checked         = extendNeedle
     widget.maxLength.checked            = maxLength
